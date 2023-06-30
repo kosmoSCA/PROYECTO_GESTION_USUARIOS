@@ -10,7 +10,7 @@ export const userRoutes = Router();
  *   get:
  *     tags:
  *       - Users
- *     description:  GET Endpoint for products
+ *     description:  GET Endpoint for users
  *     responses:
  *       '200':
  *        description: Retrieved users successfully
@@ -37,6 +37,10 @@ userRoutes.get('/getUserList', userController.getUserList);
  *          required:
  *              - NOMBRE
  *              - APELLIDO
+ *              - FECHA_NACIMIENTO
+ *              - EMAIL
+ *              - CARGO
+ *              - PASSWORD
  *          properties:
  *              NOMBRE:
  *                  type: string
@@ -44,12 +48,53 @@ userRoutes.get('/getUserList', userController.getUserList);
  *              APELLIDO:
  *                  type: string
  *                  example: Castro
+ *              FECHA_NACIMIENTO:
+ *                  type: date
+ *                  example: 2000-01-01
+ *              EMAIL:
+ *                  type: email
+ *                  example: kosmo@gmail.com
+ *              CARGO:
+ *                  type: string
+ *                  example: Employee
+ *              PASSWORD:
+ *                  type: string
+ *                  example: password1234
  *     responses:
  *       '201':
  *        description: Posted user with name succesfully
  *       '400':
  *        description: User properties or types do not match the model
  *       '500':
- *        description: Could not post user with name name
+ *        description: Could not post user with name
  */
 userRoutes.post('/newUser', userController.newUser);
+
+/**
+ * @swagger
+ * /deleteUser:
+ *   delete:
+ *     tags:
+ *       - Users
+ *     description:  DELETE Endpoint for one user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to be deleted.
+ *         schema:
+ *          type: object
+ *          required:
+ *              - EMAIL
+ *          properties:
+ *              EMAIL:
+ *                  type: email
+ *                  example: kosmo@gmail.com
+ *     responses:
+ *       '201':
+ *        description: Deleted user with email succesfully
+ *       '500':
+ *        description: Could not delete user with email
+ */
+userRoutes.delete('/deleteUser', userController.deleteUser);

@@ -13,6 +13,8 @@ const port = process.env.PORT;
 
 app.use(cors());
 
+app.use(express.json())
+
 app.get('/health', (req: Request, res: Response) => {
   res.send('PROYECTO_GESTION_USUARIOS running on current server');
 });
