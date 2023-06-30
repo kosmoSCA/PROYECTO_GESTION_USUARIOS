@@ -19,6 +19,22 @@ exports.getUserList = async () => {
     }
 };
 
+exports.getUser = async (EMAIL: string) => {
+    try {
+        await sql.connect(database.sqlConfig);
+        const result = await sql.query(`select * from USERS where EMAIL = '${EMAIL}'`);
+        return {
+            isError: false,
+            data: result.recordset,
+        }
+    } catch (error: any) {
+        return {
+            isError: true,
+            error: error.message,
+        }
+    }
+};
+
 exports.newUser = async (user: User) => {
     try {
         await sql.connect(database.sqlConfig);
@@ -36,10 +52,10 @@ exports.newUser = async (user: User) => {
     }
 };
 
-exports.deleteUser = async (email: string) => {
+exports.deleteUser = async (EMAIL: string) => {
     try {
         await sql.connect(database.sqlConfig);
-        const result = await sql.query(`delete from USERS where EMAIL = '${email}'`)
+        const result = await sql.query(`delete from USERS where EMAIL = '${EMAIL}'`)
         return {
             isError: false,
             data: result.rowsAffected,

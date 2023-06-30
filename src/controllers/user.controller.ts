@@ -17,19 +17,17 @@ exports.getUserList = async (req: Request, res: Response) => {
 }
 
 exports.newUser = async (req: Request, res: Response) => {
-    const {NOMBRE, APELLIDO, FECHA_NACIMIENTO, EMAIL, CARGO, PASSWORD} = req.body;
-    let user: User = {
+    let {NOMBRE, APELLIDO, FECHA_NACIMIENTO, EMAIL, CARGO, PASSWORD} = req.body;
+    const saltRounds = 10;
+    const hashPassword = await bcrypt.hash(PASSWORD, saltRounds)
+    const user: User = {
         NOMBRE: NOMBRE,
         APELLIDO: APELLIDO,
         FECHA_NACIMIENTO: FECHA_NACIMIENTO,
         EMAIL: EMAIL,
         CARGO: CARGO,
-        PASSWORD: PASSWORD
+        PASSWORD: hashPassword
     }
-    const saltRounds = 10;
-    bcrypt.hash(user.PASSWORD, saltRounds, function(err: any, hash: string) {
-        user.PASSWORD = hash
-    });
     if(!user.NOMBRE || !user.APELLIDO || !user.FECHA_NACIMIENTO || !user.EMAIL || !user.CARGO || !user.PASSWORD) {
         return res.status(400).send({ message: 'User properties or types do not match the model'});
     }
@@ -41,10 +39,25 @@ exports.newUser = async (req: Request, res: Response) => {
 }
 
 exports.deleteUser = async (req: Request, res: Response) => {
-    const {EMAIL, PASSWORD} = req.body;
-    const deletedUser = await userService.deleteUser(EMAIL)
-    if(deletedUser.isError){
-        return res.status(500).send({ message: `Could not delete user with email: ${EMAIL}`});
+    try {
+        const {EMAIL, PASSWORD} = req.body;
+        if(!EMAIL || !PASSWORD) {
+            throw new Error(`Missing parameters for user with email: ${EMAIL}`);
+        }
+        const user = await userService.getUser(EMAIL)
+        if(!user.data[0]){
+            return res.status(404).send(`User with email: ${EMAIL} does not exist`)
+        }
+        const isUser = await bcrypt.compare(PASSWORD, user.data[0].PASSWORD)
+        if(!isUser) {
+            throw new Error(`Wrong parameters for user with email: ${EMAIL}`);
+        }
+        const deletedUser = await userService.deleteUser(EMAIL)
+        if(deletedUser.isError){
+            return res.status(500).send({ message: `Could not delete user with email: ${EMAIL}`});
+        }
+        return res.status(201).send({ message: `Deleted user with email: ${EMAIL} succesfully`});
+    } catch (error: any) {
+        return res.status(400).send({ message: `${error.message}`});
     }
-    return res.status(201).send({ message: `Deleted user with email: ${EMAIL} succesfully`});
 }

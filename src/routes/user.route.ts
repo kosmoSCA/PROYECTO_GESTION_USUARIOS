@@ -87,13 +87,19 @@ userRoutes.post('/newUser', userController.newUser);
  *          type: object
  *          required:
  *              - EMAIL
+ *              - PASSWORD
  *          properties:
  *              EMAIL:
  *                  type: email
  *                  example: kosmo@gmail.com
+ *              PASSWORD:
+ *                  type: string
+ *                  example: password1234
  *     responses:
  *       '201':
  *        description: Deleted user with email succesfully
+ *       '400':
+ *        description: Password does not match user with email
  *       '500':
  *        description: Could not delete user with email
  */
