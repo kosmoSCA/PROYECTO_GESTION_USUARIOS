@@ -31,11 +31,40 @@ exports.newUser = async (req: Request, res: Response) => {
     if(!user.NOMBRE || !user.APELLIDO || !user.FECHA_NACIMIENTO || !user.EMAIL || !user.CARGO || !user.PASSWORD) {
         return res.status(400).send({ message: 'User properties or types do not match the model'});
     }
+    let existingUser = await userService.getUser(EMAIL)
+    if(existingUser.data[0]){
+        return res.status(400).send(`User with email: ${EMAIL} already exists`)
+    }
     const postedUser = await userService.newUser(user)
     if(postedUser.isError){
         return res.status(500).send({ message: `Could not post user named: ${user.NOMBRE} ${user.APELLIDO}`});
     }
     return res.status(201).send({ message: `Posted user named: ${user.NOMBRE} ${user.APELLIDO} succesfully`});
+}
+
+exports.updateUser= async (req: Request, res: Response) => {
+    let {EMAIL, PASSWORD} = req.body;
+    if(!EMAIL){
+        return res.status(400).send(`Cannot update without a valid email`)
+    }
+    let user = await userService.getUser(EMAIL)
+    if(!user.data[0]){
+        return res.status(404).send(`User with email: ${EMAIL} does not exist`)
+    }
+    user = Object.assign(user.data[0], req.body);
+    if(PASSWORD){
+        let isPassword = await bcrypt.compare(PASSWORD, user.PASSWORD)
+        if(!isPassword){
+            const saltRounds = 10;
+            user.PASSWORD = await bcrypt.hash(PASSWORD, saltRounds)
+        }
+    }
+    user.FECHA_NACIMIENTO = user.FECHA_NACIMIENTO.toISOString()
+    const updatedUser = await userService.updateUser(user);
+    if(updatedUser.isError){
+        return res.status(500).send({ message: `Could not update user with email: ${EMAIL}`});
+    }
+    return res.status(201).send({ message: `Updated user with email: ${EMAIL} succesfully`});
 }
 
 exports.deleteUser = async (req: Request, res: Response) => {

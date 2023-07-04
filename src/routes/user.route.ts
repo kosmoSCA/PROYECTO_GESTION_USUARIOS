@@ -70,6 +70,8 @@ userRoutes.get('/getUserList', userController.getUserList);
  */
 userRoutes.post('/newUser', userController.newUser);
 
+userRoutes.patch('/updateUser', userController.updateUser);
+
 /**
  * @swagger
  * /deleteUser:
@@ -99,7 +101,9 @@ userRoutes.post('/newUser', userController.newUser);
  *       '201':
  *        description: Deleted user with email succesfully
  *       '400':
- *        description: Password does not match user with email
+ *        description: Wrong parameters for user with email
+ *       '404':
+ *        description: User with email does not exist
  *       '500':
  *        description: Could not delete user with email
  */

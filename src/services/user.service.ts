@@ -52,6 +52,25 @@ exports.newUser = async (user: User) => {
     }
 };
 
+exports.updateUser = async (user: User) => {
+    try {
+        await sql.connect(database.sqlConfig);
+        const result = await sql.query(`UPDATE USERS 
+        set NOMBRE = '${user.NOMBRE}', APELLIDO = '${user.APELLIDO}', FECHA_NACIMIENTO = '${user.FECHA_NACIMIENTO}', 
+        CARGO = '${user.CARGO}', PASSWORD = '${user.PASSWORD}' where EMAIL = '${user.EMAIL}'`)
+        return {
+            isError: false,
+            data: result.rowsAffected,
+        }
+    } catch (error: any) {
+        console.log(error)
+        return {
+            isError: true,
+            error: error.message,
+        }
+    }
+}
+
 exports.deleteUser = async (EMAIL: string) => {
     try {
         await sql.connect(database.sqlConfig);
@@ -61,7 +80,6 @@ exports.deleteUser = async (EMAIL: string) => {
             data: result.rowsAffected,
         }
     } catch (error: any) {
-        console.log(error)
         return {
             isError: true,
             error: error.message,
