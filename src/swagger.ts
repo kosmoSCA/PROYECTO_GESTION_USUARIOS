@@ -11,6 +11,7 @@ const options = {
     },
     apis: [
         `${__dirname}/routes/user.route.ts`,
+        `${__dirname}/routes/session.route.ts`,
     ]
 };
 

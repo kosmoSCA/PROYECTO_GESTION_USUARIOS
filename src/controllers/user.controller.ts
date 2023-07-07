@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 const bcrypt = require('bcrypt');
 
+import { User } from '../models/user.model';
 const userService = require('../services/user.service');
 
 exports.getUserList = async (req: Request, res: Response) => {
@@ -22,7 +23,7 @@ exports.newUser = async (req: Request, res: Response) => {
     }
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(PASSWORD, saltRounds)
-    const user: any = {
+    const user: User = {
         NOMBRE: NOMBRE,
         APELLIDO: APELLIDO,
         FECHA_NACIMIENTO: FECHA_NACIMIENTO,
