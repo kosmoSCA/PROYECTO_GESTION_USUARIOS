@@ -28,7 +28,5 @@ exports.login = async (req: Request, res: Response) => {
 }
 
 exports.logout = async (req: Request, res: Response) => {
-
     res.clearCookie("access_token").status(201).send({message: `Logged user out succesfully`});
-
 }

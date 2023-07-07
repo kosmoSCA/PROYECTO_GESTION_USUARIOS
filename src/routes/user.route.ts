@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 const userController = require('../controllers/user.controller');
+const sessionMiddleware = require('../middlewares/session.middleware')
 
 export const userRoutes = Router();
 
@@ -10,14 +11,14 @@ export const userRoutes = Router();
  *   get:
  *     tags:
  *       - Users
- *     description:  GET Endpoint for users
+ *     description:  GET Endpoint for users. Login needed for this route, might throw 403.
  *     responses:
  *       '200':
  *        description: Retrieved users successfully
  *       '500':
  *        description: Could not retrieve users
  */
-userRoutes.get('/getUserList', userController.getUserList);
+userRoutes.get('/getUserList', sessionMiddleware.authorization, userController.getUserList);
 
 /**
  * @swagger
@@ -25,7 +26,7 @@ userRoutes.get('/getUserList', userController.getUserList);
  *   post:
  *     tags:
  *       - Users
- *     description:  POST Endpoint for one user
+ *     description:  POST Endpoint for one user. Login needed for this route, might throw 403.
  *     produces:
  *       - application/json
  *     parameters:
@@ -68,7 +69,7 @@ userRoutes.get('/getUserList', userController.getUserList);
  *       '500':
  *        description: Could not post user with name
  */
-userRoutes.post('/newUser', userController.newUser);
+userRoutes.post('/newUser', sessionMiddleware.authorization, userController.newUser);
 
 /**
  * @swagger
@@ -76,7 +77,7 @@ userRoutes.post('/newUser', userController.newUser);
  *   patch:
  *     tags:
  *       - Users
- *     description:  PATCH Endpoint for one user
+ *     description:  PATCH Endpoint for one user. Login needed for this route, might throw 403.
  *     produces:
  *       - application/json
  *     parameters:
@@ -116,7 +117,7 @@ userRoutes.post('/newUser', userController.newUser);
  *       '500':
  *        description: Could not update user with email
  */
-userRoutes.patch('/updateUser', userController.updateUser);
+userRoutes.patch('/updateUser', sessionMiddleware.authorization, userController.updateUser);
 
 /**
  * @swagger
@@ -124,7 +125,7 @@ userRoutes.patch('/updateUser', userController.updateUser);
  *   delete:
  *     tags:
  *       - Users
- *     description:  DELETE Endpoint for one user
+ *     description:  DELETE Endpoint for one user. Login needed for this route, might throw 403.
  *     produces:
  *       - application/json
  *     parameters:
@@ -153,4 +154,4 @@ userRoutes.patch('/updateUser', userController.updateUser);
  *       '500':
  *        description: Could not delete user with email
  */
-userRoutes.delete('/deleteUser', userController.deleteUser);
+userRoutes.delete('/deleteUser', sessionMiddleware.authorization, userController.deleteUser);
