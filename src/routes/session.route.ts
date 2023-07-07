@@ -11,12 +11,16 @@ export const sessionRoutes = Router();
  *     tags:
  *       - Session
  *     description:  POST Endpoint for session
- *     schema:
- *         type: object
- *         required:
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to be logged.
+ *         schema:
+ *          type: object
+ *          required:
  *              - EMAIL
  *              - PASSWORD
- *         properties:
+ *          properties:
  *              EMAIL:
  *                  type: email
  *                  example: kosmo@gmail.com
@@ -36,7 +40,7 @@ sessionRoutes.post('/login', sessionController.login);
 /**
  * @swagger
  * /logout:
- *   post:
+ *   delete:
  *     tags:
  *       - Session
  *     description:  DELETE Endpoint for session
