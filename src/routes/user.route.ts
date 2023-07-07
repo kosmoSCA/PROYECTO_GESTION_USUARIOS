@@ -70,6 +70,52 @@ userRoutes.get('/getUserList', userController.getUserList);
  */
 userRoutes.post('/newUser', userController.newUser);
 
+/**
+ * @swagger
+ * /updateUser:
+ *   patch:
+ *     tags:
+ *       - Users
+ *     description:  PATCH Endpoint for one user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to be patched.
+ *         schema:
+ *          type: object
+ *          required:
+ *              - EMAIL
+ *          properties:
+ *              NOMBRE:
+ *                  type: string
+ *                  example: Santiago
+ *              APELLIDO:
+ *                  type: string
+ *                  example: Castro
+ *              FECHA_NACIMIENTO:
+ *                  type: date
+ *                  example: 2000-01-01
+ *              EMAIL:
+ *                  type: email
+ *                  example: kosmo@gmail.com
+ *              CARGO:
+ *                  type: string
+ *                  example: Employee
+ *              PASSWORD:
+ *                  type: string
+ *                  example: password1234
+ *     responses:
+ *       '201':
+ *        description: Updated user with email succesfully
+ *       '400':
+ *        description: Cannot update without a valid email
+ *       '404':
+ *        description: User with email does not exist
+ *       '500':
+ *        description: Could not update user with email
+ */
 userRoutes.patch('/updateUser', userController.updateUser);
 
 /**
