@@ -26,7 +26,7 @@ userRoutes.get('/getUserList', sessionMiddleware.authorization, userController.g
  *   post:
  *     tags:
  *       - Users
- *     description:  POST Endpoint for one user. Login needed for this route, might throw 403.
+ *     description:  POST Endpoint for one user.
  *     produces:
  *       - application/json
  *     parameters:
@@ -69,7 +69,7 @@ userRoutes.get('/getUserList', sessionMiddleware.authorization, userController.g
  *       '500':
  *        description: Could not post user with name
  */
-userRoutes.post('/newUser', sessionMiddleware.authorization, userController.newUser);
+userRoutes.post('/newUser', userController.newUser);
 
 /**
  * @swagger

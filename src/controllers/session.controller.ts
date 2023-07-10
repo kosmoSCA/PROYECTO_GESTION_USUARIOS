@@ -22,7 +22,7 @@ exports.login = async (req: Request, res: Response) => {
     }
     const token = jwtUtil.generateJwt(EMAIL);
     return res.cookie("access_token", token, {
-        httpOnly: true,
+        //httpOnly: true,
         //secure: process.env.NODE_ENV === "production",
     }).status(201).send({message: `Logged in user with email: ${EMAIL} succesfully`});
 }

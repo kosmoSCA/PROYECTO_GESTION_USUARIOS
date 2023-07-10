@@ -14,7 +14,7 @@ const baseUrl = process.env.BASE_URL;
 const port = process.env.PORT;
 
 app.use(cookieParser())
-app.use(cors());
+app.use(cors({credentials: true, origin: true}));
 app.use(express.json())
 
 app.get('/health', (req: Request, res: Response) => {
