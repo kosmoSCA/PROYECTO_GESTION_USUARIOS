@@ -26,12 +26,16 @@ fileRoutes.get('/getFileList', fileController.getFileList);
  *     tags:
  *       - Files
  *     description:  POST Endpoint for files.
-*     produces:
+ *     produces:
  *       - application/json
  *     parameters:
+ *       - in: formData
+ *         name: ARCHIVO
+ *         type: file
+ *         description: The file to upload.
  *       - in: body
- *         name: file
- *         description: The file to be posted.
+ *         name: ENLACE
+ *         description: The file name to be posted.
  *         schema:
  *          type: object
  *          required:

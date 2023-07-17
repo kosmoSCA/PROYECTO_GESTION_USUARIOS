@@ -17,11 +17,11 @@ exports.getFileList = async (req: any, res: Response) => {
 
 exports.newFile = async (req: any, res: Response) => {
     const {ENLACE} = req.body
-    if (!req.files) {
+    if (!req.files || !ENLACE) {
         return res.status(400).send("No files were uploaded");
     }    
     const requestedFile = req.files.ARCHIVO
-    requestedFile.mv(__dirname+'../../files/' + ENLACE)
+    requestedFile.mv(__dirname+'/../../files/' + ENLACE)
     const file: File = {
         ENLACE: ENLACE,
         FECHA: new Date()
