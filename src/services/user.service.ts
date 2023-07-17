@@ -38,8 +38,8 @@ exports.getUser = async (EMAIL: string) => {
 exports.newUser = async (user: User) => {
     try {
         await sql.connect(database.sqlConfig);
-        const result = await sql.query(`insert into USERS (NOMBRE, APELLIDO, FECHA_NACIMIENTO, EMAIL, CARGO, PASSWORD) 
-        values ('${user.NOMBRE}','${user.APELLIDO}','${user.FECHA_NACIMIENTO}','${user.EMAIL}','${user.CARGO}','${user.PASSWORD}')`)
+        const result = await sql.query(`insert into USERS (NOMBRE, APELLIDO, FECHA_NACIMIENTO, EMAIL, ID_CARGO, PASSWORD) 
+        values ('${user.NOMBRE}','${user.APELLIDO}','${user.FECHA_NACIMIENTO}','${user.EMAIL}','${user.ID_CARGO}','${user.PASSWORD}')`)
         return {
             isError: false,
             data: result.rowsAffected,
@@ -57,7 +57,7 @@ exports.updateUser = async (user: User) => {
         await sql.connect(database.sqlConfig);
         const result = await sql.query(`UPDATE USERS 
         set NOMBRE = '${user.NOMBRE}', APELLIDO = '${user.APELLIDO}', FECHA_NACIMIENTO = '${user.FECHA_NACIMIENTO}', 
-        CARGO = '${user.CARGO}', PASSWORD = '${user.PASSWORD}' where EMAIL = '${user.EMAIL}'`)
+        ID_CARGO = '${user.ID_CARGO}', PASSWORD = '${user.PASSWORD}' where EMAIL = '${user.EMAIL}'`)
         return {
             isError: false,
             data: result.rowsAffected,

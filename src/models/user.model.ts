@@ -3,6 +3,6 @@ export type User = {
     APELLIDO: string,
     FECHA_NACIMIENTO: string,
     EMAIL: string,
-    CARGO: string,
+    ID_CARGO: number,
     PASSWORD: string
 }

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 const bcrypt = require('bcrypt');
 
 import { User } from '../models/user.model';
+const positionService = require('../services/position.service');
 const userService = require('../services/user.service');
 
 exports.getUserList = async (req: Request, res: Response) => {
@@ -17,9 +18,16 @@ exports.getUserList = async (req: Request, res: Response) => {
 }
 
 exports.newUser = async (req: Request, res: Response) => {
-    let {NOMBRE, APELLIDO, FECHA_NACIMIENTO, EMAIL, CARGO, PASSWORD} = req.body;
-    if(!NOMBRE || !APELLIDO || !FECHA_NACIMIENTO || !EMAIL || !CARGO || !PASSWORD) {
+    let {NOMBRE, APELLIDO, FECHA_NACIMIENTO, EMAIL, ID_CARGO, PASSWORD} = req.body;
+    if(!NOMBRE || !APELLIDO || !FECHA_NACIMIENTO || !EMAIL || !ID_CARGO || !PASSWORD) {
         return res.status(400).send({ message: 'User properties or types do not match the model'});
+    }
+    const position = await positionService.getPosition(ID_CARGO);
+    if(position.isError) {
+        return res.status(500).send({ message: `Could not get position with id ${ID_CARGO}`});
+    }
+    if(!position.data[0]){
+        return res.status(400).send(`Position with id: ${ID_CARGO} does not exist`)
     }
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(PASSWORD, saltRounds)
@@ -28,7 +36,7 @@ exports.newUser = async (req: Request, res: Response) => {
         APELLIDO: APELLIDO,
         FECHA_NACIMIENTO: FECHA_NACIMIENTO,
         EMAIL: EMAIL,
-        CARGO: CARGO,
+        ID_CARGO: ID_CARGO,
         PASSWORD: hashPassword
     }
     let existingUser = await userService.getUser(EMAIL)
@@ -44,13 +52,22 @@ exports.newUser = async (req: Request, res: Response) => {
 }
 
 exports.updateUser = async (req: Request, res: Response) => {
-    let {EMAIL, PASSWORD} = req.body;
+    let {EMAIL, PASSWORD, ID_CARGO} = req.body;
     if(!EMAIL){
         return res.status(400).send(`Cannot update without a valid email`)
     }
     let user = await userService.getUser(EMAIL)
     if(!user.data[0]){
         return res.status(404).send(`User with email: ${EMAIL} does not exist`)
+    }
+    if(ID_CARGO){
+        const position = await positionService.getPosition(ID_CARGO);
+        if(position.isError) {
+            return res.status(500).send({ message: `Could not get position with id ${ID_CARGO}`});
+        }
+        if(!position.data[0]){
+            return res.status(400).send(`Position with id: ${ID_CARGO} does not exist`)
+        }
     }
     user = Object.assign(user.data[0], req.body);
     if(PASSWORD){
@@ -69,17 +86,13 @@ exports.updateUser = async (req: Request, res: Response) => {
 
 exports.deleteUser = async (req: Request, res: Response) => {
     try {
-        const {EMAIL, PASSWORD} = req.body;
-        if(!EMAIL || !PASSWORD) {
-            throw new Error(`Missing parameters for user with email: ${EMAIL}`);
+        const {EMAIL} = req.body;
+        if(!EMAIL) {
+            throw new Error(`Email needed to delete user`);
         }
         const user = await userService.getUser(EMAIL)
         if(!user.data[0]){
             return res.status(404).send(`User with email: ${EMAIL} does not exist`)
-        }
-        const isUser = await bcrypt.compare(PASSWORD, user.data[0].PASSWORD)
-        if(!isUser) {
-            throw new Error(`Wrong parameters for user with email: ${EMAIL}`);
         }
         const deletedUser = await userService.deleteUser(EMAIL)
         if(deletedUser.isError){

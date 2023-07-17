@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
 const userController = require('../controllers/user.controller');
-const sessionMiddleware = require('../middlewares/session.middleware')
 
 export const userRoutes = Router();
 
@@ -11,14 +10,14 @@ export const userRoutes = Router();
  *   get:
  *     tags:
  *       - Users
- *     description:  GET Endpoint for users. Login needed for this route, might throw 403.
+ *     description:  GET Endpoint for users.
  *     responses:
  *       '200':
  *        description: Retrieved users successfully
  *       '500':
  *        description: Could not retrieve users
  */
-userRoutes.get('/getUserList', sessionMiddleware.authorization, userController.getUserList);
+userRoutes.get('/getUserList', userController.getUserList);
 
 /**
  * @swagger
@@ -40,7 +39,7 @@ userRoutes.get('/getUserList', sessionMiddleware.authorization, userController.g
  *              - APELLIDO
  *              - FECHA_NACIMIENTO
  *              - EMAIL
- *              - CARGO
+ *              - ID_CARGO
  *              - PASSWORD
  *          properties:
  *              NOMBRE:
@@ -55,9 +54,9 @@ userRoutes.get('/getUserList', sessionMiddleware.authorization, userController.g
  *              EMAIL:
  *                  type: email
  *                  example: kosmo@gmail.com
- *              CARGO:
- *                  type: string
- *                  example: Employee
+ *              ID_CARGO:
+ *                  type: integer
+ *                  example: 2
  *              PASSWORD:
  *                  type: string
  *                  example: password1234
@@ -77,7 +76,7 @@ userRoutes.post('/newUser', userController.newUser);
  *   patch:
  *     tags:
  *       - Users
- *     description:  PATCH Endpoint for one user. Login needed for this route, might throw 403.
+ *     description:  PATCH Endpoint for one user.
  *     produces:
  *       - application/json
  *     parameters:
@@ -101,9 +100,9 @@ userRoutes.post('/newUser', userController.newUser);
  *              EMAIL:
  *                  type: email
  *                  example: kosmo@gmail.com
- *              CARGO:
- *                  type: string
- *                  example: Employee
+ *              ID_CARGO:
+ *                  type: integer
+ *                  example: 2
  *              PASSWORD:
  *                  type: string
  *                  example: password1234
@@ -117,7 +116,7 @@ userRoutes.post('/newUser', userController.newUser);
  *       '500':
  *        description: Could not update user with email
  */
-userRoutes.patch('/updateUser', sessionMiddleware.authorization, userController.updateUser);
+userRoutes.patch('/updateUser', userController.updateUser);
 
 /**
  * @swagger
@@ -125,7 +124,7 @@ userRoutes.patch('/updateUser', sessionMiddleware.authorization, userController.
  *   delete:
  *     tags:
  *       - Users
- *     description:  DELETE Endpoint for one user. Login needed for this route, might throw 403.
+ *     description:  DELETE Endpoint for one user.
  *     produces:
  *       - application/json
  *     parameters:
@@ -136,22 +135,18 @@ userRoutes.patch('/updateUser', sessionMiddleware.authorization, userController.
  *          type: object
  *          required:
  *              - EMAIL
- *              - PASSWORD
  *          properties:
  *              EMAIL:
  *                  type: email
  *                  example: kosmo@gmail.com
- *              PASSWORD:
- *                  type: string
- *                  example: password1234
  *     responses:
  *       '201':
  *        description: Deleted user with email succesfully
  *       '400':
- *        description: Wrong parameters for user with email
+ *        description: Email needed to delete user
  *       '404':
  *        description: User with email does not exist
  *       '500':
  *        description: Could not delete user with email
  */
-userRoutes.delete('/deleteUser', sessionMiddleware.authorization, userController.deleteUser);
+userRoutes.delete('/deleteUser', userController.deleteUser);

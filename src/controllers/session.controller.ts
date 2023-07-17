@@ -24,7 +24,7 @@ exports.login = async (req: Request, res: Response) => {
     return res.cookie("access_token", token, {
         //httpOnly: true,
         //secure: process.env.NODE_ENV === "production",
-    }).status(201).send({message: `Logged in user with email: ${EMAIL} succesfully`});
+    }).status(201).send({message: `Logged in user with email: ${EMAIL} succesfully`, token: token});
 }
 
 exports.logout = async (req: Request, res: Response) => {
