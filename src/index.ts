@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
@@ -8,7 +9,7 @@ import { positionRoutes } from './routes/position.route';
 import { sessionRoutes } from './routes/session.route';
 import { userRoutes } from './routes/user.route';
 import {swaggerDocs} from './swagger';
-import { fileRoutes } from './routes/file.route';
+import { imageRoutes } from './routes/image.route';
 
 dotenv.config();
 
@@ -21,14 +22,16 @@ app.use(cors({credentials: true, origin: true}));
 app.use(express.json());
 app.use(fileUpload());
 
+app.use(express.static(path.join(__dirname,'..','files')));
+
 app.get('/health', (req: Request, res: Response) => {
   res.send('PROYECTO_GESTION_USUARIOS running on current server');
 });
 
+app.use('/', imageRoutes);
 app.use('/', positionRoutes);
 app.use('/', sessionRoutes);
 app.use('/', userRoutes);
-app.use('/files', fileRoutes);
 
 
 app.listen(port, () => {

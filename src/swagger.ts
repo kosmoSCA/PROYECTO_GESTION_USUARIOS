@@ -10,7 +10,7 @@ const options = {
         }
     },
     apis: [
-        `${__dirname}/routes/file.route.ts`,
+        `${__dirname}/routes/image.route.ts`,
         `${__dirname}/routes/position.route.ts`,
         `${__dirname}/routes/session.route.ts`,
         `${__dirname}/routes/user.route.ts`,
